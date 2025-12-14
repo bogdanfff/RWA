@@ -1,0 +1,44 @@
+
+<mat-card class="page">
+  <mat-card-content class="card">
+    <div class="form-fields mat-elevation-z10">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+      <h2>{{'Log In2'|translate}}</h2>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>{{'Email'|translate}}</mat-label>
+        <input matInput [placeholder]="'Email'|translate" id="username" type="text" placeholder="Username" formControlName="username" required>
+        <mat-error>
+          <!-- Email required -->
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{'Password'|translate}}</mat-label>
+        <input matInput [placeholder]="'Password'|translate" id="password" type="password" formControlName="password" required>
+        <mat-error>
+          <!-- Password required -->
+        </mat-error>
+      </mat-form-field>
+      <div class="butt">
+        <button mat-stroked-button color="primary" [disabled]="!form.valid" routerLink="/users" routerLinkActive="active">{{'Log In'|translate}}</button>
+      </div>
+    </form>
+      <div class="footer">
+        <button mat-stroked-button color="primary" 
+          routerLink="/lineView" routerLinkActive="active" class="footer-button">{{'LineView'|translate}}</button>
+
+        <mat-form-field  class="footer-select" appearance="outline">
+          <mat-label>Language</mat-label>
+          <mat-select [(value)]="defaultLang" (selectionChange)="selectLanguage($event.value)">
+            <mat-option value="sr-RS">{{'language.serbian' | translate}}</mat-option>
+            <mat-option value="en-US" >{{'language.english' | translate}}</mat-option>
+            <!-- <mat-option value="ru-RU">{{'language.russian' | translate}}</mat-option> -->
+          </mat-select>
+        </mat-form-field>
+      </div>
+    
+    
+  </div>
+  </mat-card-content>
+</mat-card>

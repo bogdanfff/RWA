@@ -1,0 +1,88 @@
+.users-table {
+    width: 100%;
+    border-collapse: separate;
+}
+
+tr:nth-child(odd) {
+    background-color: #faf9f9;
+}
+
+tr {
+    font-size: 13px;
+
+}
+
+th {
+    background-color: white !important;
+    color: #3F51B5;
+    border-bottom: thin solid #3F51B5;
+    font-size: 13px;
+    height: 3px;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+.mat-header-row {
+    height: 45px;
+}
+
+.mat-row {
+    height: 47px;
+}
+
+.sortCell mat-icon {
+    color: #3F51B5;
+    padding-right: 5px;
+}
+
+.sortCell {
+    user-select: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.empty {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    border-left: 1px solid #3F51B5;
+    border-right: 1px solid #3F51B5;
+    border-bottom: 1px solid #3F51B5;
+    background-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    /* box-shadow: 0 12px 12px rgba(0, 0, 0, 0.1); */
+    background-color: white;
+}
+
+.empty h3,
+mat-icon {
+    color: #3F51B5;
+}
+
+.paginator,
+.paginator-hide {
+    margin-top: 10px;
+    margin-right: -20px;
+    margin-left: -20px;
+}
+
+@media (max-width: 840px) {
+    tr:nth-child(even) {
+        background-color: #faf9f9;
+    }
+    tr:nth-child(odd) {
+        background-color: white;
+    }
+    .paginator {
+        margin-bottom: -10px;
+    }
+}

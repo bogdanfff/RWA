@@ -1,0 +1,205 @@
+@import url('scrollbar-style.css');
+@import url('table-style.css');
+
+.content {
+    /* max-width: 1700px; */
+    margin: 0 auto;
+    min-height: calc(100vh - 60px);
+    width: 100%;
+    max-width: 1920px;
+    background: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.page-title {
+    color: #3F51B5;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 0px;
+    /* text-shadow: 5px 5px 2px rgba(0, 0, 0, 0.1); */
+
+}
+
+
+.mat-mdc-outlined-button {
+    height: 56px;
+    border-color: rgba(0, 0, 0, 0.24);
+}
+
+
+/* Table styling */
+.table-container {
+    overflow: auto;
+    height: 100%;
+}
+
+.mat-table {
+    font-size: 5px;
+}
+
+
+/* .mat-header-cell {
+    background-color: #3F51B5;
+    color: white;
+    font-weight: bold;
+    text-align: left;
+  } */
+
+/* .mat-cell {
+    background-color: #ffffff;
+} */
+
+
+
+/*----Buttons styling*/
+.mat-column-button {
+    min-width: 55px;
+    width: 55px;
+    text-align: right;
+
+}
+
+.custom-icon-button:hover {
+    background-color: rgba(161, 26, 26, 0.04);
+    border-radius: 7px;
+    /* Optional: subtle hover effect */
+}
+
+.custom-icon-button {
+    padding-top: 8px;
+    border: none;
+    background-color: transparent;
+}
+
+.custom-icon-button mat-icon {
+    font-size: 18px;
+    color: #3F51B5;
+}
+
+.filter-sort .mat-mdc-form-field,.filter-sort button {
+    min-width: 230px;
+}
+
+
+@media (max-width: 840px) {
+    .content {
+        min-height: calc(100vh - 50px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .table-container {
+        overflow: hidden;
+    }
+
+    .page-title {
+        font-size: 1.2rem;
+        margin-bottom: 0px;
+    }
+
+    td h3 {
+        color: #3F51B5;
+        margin-bottom: 5px;
+        font-size: 1.2rem;
+        margin-top: 0px;
+    }
+
+    td {
+        padding: 13px 20px 13px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    tr {
+        font-size: 15px;
+    }
+
+    .mobile-table {
+        display: contents;
+    }
+    
+    .mobile-table-name {
+        font-weight: bold;
+        padding-left: 15px;
+        color: #3F51B5;
+        font-size: 1.2rem;
+        padding-bottom: 15px;
+    }
+
+    .details-row {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 3px solid #f0f0f0;
+        padding: 10px;
+    }
+
+    .return-button-div {
+        width: 100%;
+        text-align: end;
+    }
+
+    .return-button-div .mat-mdc-outlined-button,
+    .sort-div .mat-mdc-outlined-button {
+        width: 30px;
+        height: 40px;
+        align-self: end;
+        /* font-size: 2.2rem; */
+        border: none;
+        margin-right: -10px;
+        margin-bottom: 10px;
+    }
+
+    .back-key {
+        margin: 0;
+        font-size: 2.2rem;
+        height: 32px;
+        width: 32px;
+        padding-right: 4px;
+    }
+
+    .sort-div {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .custom-icon-button {
+        border: 1px solid #f0f0f0;
+        margin-left: 10px;
+    }
+
+    .details-buttons {
+        width: calc(100vw - 40px);
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        bottom: 40px;
+        gap: 20px;
+
+    }
+
+    .details-buttons .mat-mdc-outlined-button {
+        height: 35px;
+        flex: auto;
+        max-width: 150px;
+    }
+
+    .empty {
+        border-top: 1px solid #3F51B5;
+        height: 100%;
+        flex: 1;
+    }
+
+    .paginator-hide {
+        display: none;
+    }
+
+    ::ng-deep .mat-mdc-paginator-page-size {
+        display: none !important;
+    }
+
+}
