@@ -1,0 +1,83 @@
+# -------------------------------
+# Backend NestJS - KOSUBackend/kosu-api
+# -------------------------------
+
+/KOSUBackend/kosu-api/dist
+/KOSUBackend/kosu-api/build
+/KOSUBackend/kosu-api/node_modules
+
+# Logs
+/KOSUBackend/kosu-api/logs
+/KOSUBackend/kosu-api/*.log
+/KOSUBackend/kosu-api/npm-debug.log*
+/KOSUBackend/kosu-api/pnpm-debug.log*
+/KOSUBackend/kosu-api/yarn-debug.log*
+/KOSUBackend/kosu-api/yarn-error.log*
+/KOSUBackend/kosu-api/lerna-debug.log*
+
+# OS
+/KOSUBackend/kosu-api/.DS_Store
+
+# Tests
+/KOSUBackend/kosu-api/coverage
+/KOSUBackend/kosu-api/.nyc_output
+
+# IDEs and editors
+/KOSUBackend/kosu-api/.idea
+/KOSUBackend/kosu-api/.project
+/KOSUBackend/kosu-api/.classpath
+/KOSUBackend/kosu-api/.c9/
+/KOSUBackend/kosu-api/*.launch
+/KOSUBackend/kosu-api/.settings/
+/KOSUBackend/kosu-api/*.sublime-workspace
+
+# IDE - VSCode
+/KOSUBackend/kosu-api/.vscode/*
+!/KOSUBackend/kosu-api/.vscode/settings.json
+!/KOSUBackend/kosu-api/.vscode/tasks.json
+!/KOSUBackend/kosu-api/.vscode/launch.json
+!/KOSUBackend/kosu-api/.vscode/extensions.json
+
+# dotenv environment variable files
+/KOSUBackend/kosu-api/.env
+/KOSUBackend/kosu-api/.env.development.local
+/KOSUBackend/kosu-api/.env.test.local
+/KOSUBackend/kosu-api/.env.production.local
+/KOSUBackend/kosu-api/.env.local
+
+# temp directory
+/KOSUBackend/kosu-api/.temp
+/KOSUBackend/kosu-api/.tmp
+
+# Runtime data
+/KOSUBackend/kosu-api/pids
+/KOSUBackend/kosu-api/*.pid
+/KOSUBackend/kosu-api/*.seed
+/KOSUBackend/kosu-api/*.pid.lock
+
+# Diagnostic reports
+/KOSUBackend/kosu-api/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# -------------------------------
+# Angular - newKOSU
+# -------------------------------
+
+/newKOSU/node_modules/
+/newKOSU/dist/
+/newKOSU/android/
+/newKOSU/ios/
+/newKOSU/.angular/cache/
+/newKOSU/.env
+/newKOSU/.env.local
+/newKOSU/.env.development.local
+/newKOSU/.env.production.local
+/newKOSU/.env.test.local
+
+# -------------------------------
+# Generic frontend / other Angular projects
+# -------------------------------
+node_modules/
+dist/
+android/
+ios/
+.angular/cache/
