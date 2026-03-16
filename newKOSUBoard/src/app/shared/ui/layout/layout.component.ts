@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { filter, map, startWith } from 'rxjs';
+import { AuthService } from '../../../auth/data-access/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 const hiddenRoutes = ['/settings', '/gameplay', '/store', '/avatarBuilder', '/privacyPolicy'];
@@ -27,12 +29,16 @@ const hiddenRoutes = ['/settings', '/gameplay', '/store', '/avatarBuilder', '/pr
   animations: []
 })
 export class LayoutComponent {
+  private readonly router = inject(Router)
+  private readonly auth = inject(AuthService)
+  private _snackBar = inject(MatSnackBar);
+
   isDesktop = true
   loggedIn = true
   canSee = true
-  user = { role: 'Administrator', userName: 'bogdn' }
+  user = this.auth.getUser()
   isOnline = true
-  private readonly router = inject(Router)
+
   menu = menu
   menuLinks: menuLink[] = menu.flatMap(section =>
     section.items
@@ -43,21 +49,33 @@ export class LayoutComponent {
       }))
   );
   $title = this.router.events.pipe(
-    filter(event => event instanceof NavigationEnd), 
+    filter(event => event instanceof NavigationEnd),
     map((ev: NavigationEnd) => ev.urlAfterRedirects),
-    startWith('/'+this.router.url.split('/').pop()),
-    map((ev) => 
+    startWith('/' + this.router.url.split('/').pop()),
+    map((ev) =>
       this.menuLinks.filter(val => val.link == ev)[0]?.label
     )
   )
   hasRole(roles?: string[]): boolean {
-    return !roles || roles.includes(this.user?.role);
+    return !roles || roles.includes(this.user?.role!);
   }
 
   isVisible(item: MenuItem): boolean {
     return item.canSee !== false;
   }
-  logOut() { }
+  async logOut() {
+    const result = await this.auth.logout();
+
+    this._snackBar.open(
+      result.message,
+      result.success ? 'Success' : 'Error',
+      { duration: 4000 }
+    );
+
+    if (result.success) {
+      this.router.navigateByUrl('/login');
+    }
+  }
 }
 interface MenuItem {
   label: string;
@@ -147,7 +165,7 @@ export const menu: MenuSection[] = [
         link: '/home',
         canSee: true
       },
-      
+
     ]
   }
 ];

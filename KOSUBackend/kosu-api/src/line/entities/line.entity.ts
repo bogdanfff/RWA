@@ -1,9 +1,10 @@
+import { Segment } from 'src/segment/entities/segment.entity';
 import { Team } from 'src/team/entities/team.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('lines')
 export class Line {
-  @PrimaryGeneratedColumn({ name: 'id', type: 'int' })
+  @PrimaryGeneratedColumn({ name: 'lineId', type: 'int' })
   id: number;
 
   @Column({ name: 'lineName', type: 'nvarchar', length: 255 })
@@ -27,15 +28,20 @@ export class Line {
   @Column({ name: 'assignedEmployeesNo', type: 'int', nullable: true })
   assignedEmployeesNo: number | null;
 
-  @Column({ name: 'assignedTeam', type: 'nvarchar', length: 255, nullable: true })
-  assignedTeam: string | null;
+  @Column({ name: 'segmentNameId', type: 'int', nullable: false })
+  segmentNameId: number;
 
-  @Column({ name: 'segmentName', type: 'nvarchar', length: 255 })
-  segmentName: string;
+  @ManyToOne(() => Segment, segment => segment.lines, { nullable: false })
+  @JoinColumn({ name: 'segmentNameId' })
+  segmentName: Segment;
 
-  @Column({ name: 'updateDate', type: 'datetime' })
+  @UpdateDateColumn({ name: 'updateDate', type: 'datetime' })
   updateDate: Date;
 
+  @Column({ name: 'assignedTeamId', type: 'int', nullable: true })
+  assignedTeamId: number;
+
   @ManyToOne(() => Team, team => team.lines, { nullable: true })
-  team: Team | null;
+  @JoinColumn({ name: 'assignedTeamId' })
+  assignedTeam: Team | null;
 }

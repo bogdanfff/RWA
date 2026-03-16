@@ -11,11 +11,13 @@ export class AuthController {
   @Post()
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
-  } 
-  
+  }
+
   @Post('CheckRefreshToken')
-  async refreshToken(@Body('refreshToken') refreshToken: string) {
-    return "this.authService.refreshAccessToken(refreshToken)";
+  async refreshToken(
+    @Body('refreshToken') refreshToken: string,
+  ) {
+    return this.authService.refreshAccessToken(refreshToken);
   }
 
   @UseGuards(AuthGuard('jwt'))

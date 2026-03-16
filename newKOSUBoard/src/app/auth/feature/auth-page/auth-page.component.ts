@@ -17,6 +17,7 @@ import { authUser } from '../../data-access/auth.model';
 import { AuthService } from '../../data-access/auth.service';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 
@@ -34,7 +35,7 @@ export class AuthPageComponent {
   subscriptions: Subscription[] = []
   user!: authUser;
   form: FormGroup;
-  defaultLang: string = 'sr-RS';
+  defaultLang: string = this.translate.getCurrentLang();
   formFields = [
   { label: 'Email', control: 'username', type: 'text', required: true, error: 'Email required' ,autocomplete:'username'},
   { label: 'Password', control: 'password', type: 'password', required: true, error: 'Password required'  ,autocomplete:'current-password'}
@@ -53,22 +54,20 @@ languages = [
 
     })
   }
-  $loggedUser = this.authService.initializeUser().pipe(
-    switchMap(() => this.authService.user$), take(1),
-    tap(user => {
-      if (user) {
-        this.router.navigateByUrl('statistics')
-      }
-    }
-    )
-  ).subscribe()
+  // $loggedUser = this.authService.initializeUser().pipe(
+  //   switchMap(() => this.authService.user$), take(1),
+  //   tap(user => {
+  //     if (user) {
+  //       this.router.navigateByUrl('statistics')
+  //     }
+  //   }
+  //   )
+  // ).subscribe()
 
   ngOnInit() {
-    console.log(this.translate.getLangs());
     
     this.loadDefaultLanguage().then(value => {
       this.defaultLang = value ? value : 'sr-RS';
-      console.log(this.defaultLang)
       this.translate.setFallbackLang(this.defaultLang);
 
     })
@@ -77,20 +76,19 @@ languages = [
   onSubmit() {
     this.subscriptions.push(
       this.authService.logIn(this.form.value.username, this.form.value.password).subscribe({
-        next: val => {
+        next: () => {
           this._snackBar.open("Log In ", 'Successfull', { duration: 4000, });
           // this.dialogRef.close(true)
           this.router.navigate(['/home']);
         },
+        error: (val:HttpErrorResponse) =>{
+          this._snackBar.open(val.error.message, 'Error', { duration: 4000, });
+        }
       }))
   }
 
   async loadDefaultLanguage() {
     const { value } = await Preferences.get({ key: 'language' });
-    // this.defaultLang = value || 'en-US';
-    // this.form.get('language')?.setValue(this.defaultLang);
-
-    // this.translate.use(value ? value : 'en-US');
     return value
   }
 

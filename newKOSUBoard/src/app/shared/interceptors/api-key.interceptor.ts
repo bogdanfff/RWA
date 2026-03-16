@@ -17,28 +17,29 @@ export const jwtInterceptor: HttpInterceptorFn = (
   request: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
+console.log('Uslo');
 
   const userAut = inject(AuthService);
   const router = inject(Router);
 
-  // Skip refresh-token calls
+  // refresh poziv
   if (request.url.includes('CheckRefreshToken')) {
     return next(request);
   }
 
-  return userAut.userValue.pipe(
-    take(1),
-    switchMap(user => {
-      if (user?.token) {
-        if (userAut.isTokenExpired(user.token)) {
-          return handleTokenExpired(request, next, userAut, router);
-        }
-        return next(addToken(request, user.token));
-      }
+  const user = userAut.currentUser;
+  // console.log(user);
+  if (user?.token) {
+    
+    
+    if (userAut.isTokenExpired(user.token)) {
+      return handleTokenExpired(request, next, userAut, router);
+    }
 
-      return next(request);
-    })
-  );
+    return next(addToken(request, user.token));
+  }
+
+  return next(request);
 };
 
 function handleTokenExpired(
@@ -62,7 +63,7 @@ function handleTokenExpired(
       catchError(error => {
         refreshInProgress = false;
         userAut.logout();
-        router.navigateByUrl('/logIn');
+        router.navigateByUrl('/login');
         return throwError(() => error);
       })
     );

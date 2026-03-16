@@ -59,19 +59,19 @@
 /KOSUBackend/kosu-api/report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # -------------------------------
-# Angular - newKOSU
+# Angular - newKOSUBoardBoard
 # -------------------------------
 
-/newKOSU/node_modules/
-/newKOSU/dist/
-/newKOSU/android/
-/newKOSU/ios/
-/newKOSU/.angular/cache/
-/newKOSU/.env
-/newKOSU/.env.local
-/newKOSU/.env.development.local
-/newKOSU/.env.production.local
-/newKOSU/.env.test.local
+/newKOSUBoardBoard/node_modules/
+/newKOSUBoardBoard/dist/
+/newKOSUBoardBoard/android/
+/newKOSUBoardBoard/ios/
+/newKOSUBoardBoard/.angular/cache/
+/newKOSUBoardBoard/.env
+/newKOSUBoardBoard/.env.local
+/newKOSUBoardBoard/.env.development.local
+/newKOSUBoardBoard/.env.production.local
+/newKOSUBoardBoard/.env.test.local
 
 # -------------------------------
 # Generic frontend / other Angular projects

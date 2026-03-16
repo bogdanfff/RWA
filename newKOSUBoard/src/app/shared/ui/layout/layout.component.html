@@ -18,7 +18,7 @@
           </mat-list-item>
 
           <!-- Manage -->
-          <mat-expansion-panel expanded>
+          <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>{{ 'Manage' | translate }}</mat-panel-title>
             </mat-expansion-panel-header>
@@ -43,7 +43,7 @@
           </mat-expansion-panel>
 
           <!-- Structure -->
-          <mat-expansion-panel>
+          <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title>{{ 'Structure' | translate }}</mat-panel-title>
             </mat-expansion-panel-header>
@@ -59,24 +59,26 @@
         </mat-nav-list>
       </div>
     </mat-drawer>
-    <mat-drawer-content class="drawer-container">
+    <mat-drawer-content class="drawer-container" style="height: auto;">
 
-      <div class="header-div">
+      <div class="header-div" style="border-bottom: 3px solid #f0f0f0;">
         <button class="menuBtn" (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>
         <a style="padding-left: 50px;">{{($title|async) | translate }}</a>
         <div class="header-right">
           <mat-icon aria-hidden="false" aria-label="User icon">person_outline</mat-icon>
-          <a [matTooltip]="user.role">{{ user.userName }}</a>
+          <a [matTooltip]="user?.role!">{{ user?.userName! }}</a>
           <mat-icon [matTooltip]="'Log Out'|translate" (click)="logOut()"
             style="padding-left: 25px;cursor: pointer;">logout</mat-icon>
         </div>
       </div>
 
       <!-- <div style="height: 100px;overflow-y: auto;"> -->
+<div style="padding: 0px;">
+        <router-outlet class="layout-router"></router-outlet>
 
-
+</div>
     </mat-drawer-content>
   </mat-drawer-container>
 
-  <router-outlet class="layout-router"></router-outlet>
+
 </div>

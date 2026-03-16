@@ -1,31 +1,30 @@
-// teams.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { initialTeamsState, TeamsState } from './teams.state';
-import * as TeamsActions from './teams.actions';
+import { TeamsActions } from './teams.actions';
 
 export const teamsReducer = createReducer(
   initialTeamsState,
 
   // Load
-  on(TeamsActions.loadTeams, state => ({ ...state, loading: true })),
-  on(TeamsActions.loadTeamsSuccess, (state, { teams }) => ({ ...state, loading: false, teams })),
-  on(TeamsActions.loadTeamsFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(TeamsActions.load, state => ({ ...state, loading: true })),
+  on(TeamsActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, teams: items })),
+  on(TeamsActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
   // Add
-  on(TeamsActions.addTeamSuccess, (state, { team }) => ({ ...state, teams: [...state.teams, team] })),
-  on(TeamsActions.addTeamFailure, (state, { error }) => ({ ...state, error })),
+  on(TeamsActions.addSuccess, (state, { item }) => ({ ...state, teams: [item, ...state.teams] })),
+  on(TeamsActions.addFailure, (state, { error }) => ({ ...state, error })),
 
   // Update
-  on(TeamsActions.updateTeamSuccess, (state, { team }) => ({
+  on(TeamsActions.updateSuccess, (state, { item }) => ({
     ...state,
-    teams: state.teams.map(t => t.id === team.id ? team : t)
+    teams: state.teams.map(t => t.id === item.id ? item : t)
   })),
-  on(TeamsActions.updateTeamFailure, (state, { error }) => ({ ...state, error })),
+  on(TeamsActions.updateFailure, (state, { error }) => ({ ...state, error })),
 
   // Delete
-  on(TeamsActions.deleteTeamSuccess, (state, { id }) => ({
+  on(TeamsActions.deleteSuccess, (state, { id }) => ({
     ...state,
     teams: state.teams.filter(t => t.id !== id)
   })),
-  on(TeamsActions.deleteTeamFailure, (state, { error }) => ({ ...state, error }))
+  on(TeamsActions.deleteFailure, (state, { error }) => ({ ...state, error }))
 );

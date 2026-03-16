@@ -1,1 +1,9 @@
-<div></div>
+<app-data-table
+[loading]="loading$ | async"
+  [data]="lines$ | async"
+  [columns]="columns"
+  [actions]="actions"
+  [pageSize]="5"
+  [addButton]="addButton"
+  [assignButton]="assignButton">
+</app-data-table>

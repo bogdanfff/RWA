@@ -9,20 +9,19 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const routeSegment = state.url.split('/')[1];
   const allowedSegments = ['incidentInput', 'incidentCode', 'incidentCategory', 'incidentDepartment', 'comments', 'teams', 'lineReports', 'teamReports', 'hourly', 'assignTeam', 'statistics'];
+  const allowedRoles = ['Administrator' , 'SuperHead' ,'HeadOfPlant','HeadOfProduction', 'Member']
 // console.log('uso u guard');
 
   return role.user$.pipe(
     take(1),
     switchMap(user => { return user ? of(user) : role.initializeUser() }),
-    switchMap(user => {
-      return of(user?.role);
-    }),
+    map(user => user?.role),
     map(userRole => {
       if (!userRole) {
         router.navigateByUrl('/login')
         return false;
       }
-      else if (userRole === 'Administrator' || userRole === 'SuperHead' || userRole === 'HeadOfPlant' || userRole === 'HeadOfProduction') {
+      else if (allowedRoles.includes(userRole)) {
         // if(routeSegment === 'hourly' && userRole === 'SuperHead'){
         //   return false
         // }

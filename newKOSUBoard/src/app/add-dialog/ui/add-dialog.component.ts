@@ -1,0 +1,71 @@
+import { Component, inject, model } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FormField } from '../models';
+import { CommonModule, TitleCasePipe } from '@angular/common';
+import { DialogService } from '../data/dialog.service';
+import { MatOption, MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { Team } from '../../teams/models/teams.model';
+import { Segment } from '../../segment/models/segments.model';
+import { Line } from '../../line/models/lines.model';
+import { User } from '../../users/models/users.model';
+import { allEntities, DialogData } from '../../shared/models/globalModels';
+@Component({
+  selector: 'app-add-dialog',
+  standalone: true,
+  imports: [TranslatePipe, ReactiveFormsModule, CommonModule, MatOption, MatSelectModule, MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatButtonModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatTooltipModule,
+  ], templateUrl: './add-dialog.component.html',
+  styleUrl: './add-dialog.component.scss'
+})
+export class AddDialogComponent<T> {
+  readonly dialogRef = inject(MatDialogRef<AddDialogComponent<T>>);
+  readonly dialogService = inject(DialogService)
+  readonly data = inject(MAT_DIALOG_DATA) as DialogData<T>;
+  edit = this.data.edit
+  form!: FormGroup;
+  fields!: FormField[];
+
+  constructor() {
+    this.initForm();
+  }
+  
+  ngOnInit() {
+  }
+
+  initForm() {
+    this.fields = this.dialogService.getSchemas()[this.data.entity];
+
+    const group: any = {};
+    this.fields.forEach(field => {
+      const defaultValue = (this.data.value as any)?.[field.name] ?? '';
+      group[field.name] = new FormControl(defaultValue, field.validators || []);
+    });
+
+    this.form = new FormGroup(group);
+
+  }
+
+  submit() {
+    if (this.form.valid) {
+      this.dialogRef.close(this.form.value);
+    }
+  }
+
+  cancel() {
+    this.dialogRef.close(null);
+  }
+}

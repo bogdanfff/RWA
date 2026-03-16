@@ -5,6 +5,7 @@ import { environment } from '../../../enviroments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { authUser } from './auth.model';
 import { jwtDecode } from 'jwt-decode';
+import { User } from '../../users/models/users.model';
 
 const user_storage = 'user_data'
 // const DAILY_GIFT = 'is_daily_claimed'
@@ -14,8 +15,8 @@ const user_storage = 'user_data'
 })
 
 export class AuthService {
-private baseUrl = environment.baseUrl;
- private readonly http = inject(HttpClient)
+  private baseUrl = environment.baseUrl;
+  private readonly http = inject(HttpClient)
   private userSubject$ = new BehaviorSubject<authUser | null>(null);
   user$ = this.userSubject$.asObservable();
 
@@ -44,12 +45,17 @@ private baseUrl = environment.baseUrl;
 
   }
 
-  async logout() {
+  async logout(): Promise<{ message: string; success: boolean }> {
+    try {
+      await Preferences.remove({ key: user_storage });
 
-    await Preferences.remove({ key: user_storage });
-    // localStorage.removeItem('token');
-    this.userSubject$.next(null);
-    this.loggedIn.next(false)
+      this.userSubject$.next(null);
+      this.loggedIn.next(false);
+
+      return { message: 'Logged out', success: true };
+    } catch (err) {
+      return { message: "Couldn't log out", success: false };
+    }
   }
 
   initializeUser(): Observable<authUser | null> {
@@ -90,41 +96,41 @@ private baseUrl = environment.baseUrl;
   //   this.storageVal('token',token)
   // }
 
-  refreshAccessToken(): Observable<any> {
-    this.loadVal(user_storage).then((u) => console.log('User:', u));
-
-    return from(this.loadVal(user_storage)).pipe(
-      switchMap((userJson) => {
-        if (!userJson) {
+  refreshAccessToken(): Observable<authUser> {
+    return this.userSubject$.pipe(
+      take(1),
+      switchMap(user => {
+        if (!user) {
           return throwError(() => new Error('No user found'));
         }
 
-        const user: authUser = JSON.parse(userJson);
         const body = {
-          userName: user.userName,
-          accessToken: user.token,
           refreshToken: user.refreshToken
         };
 
-        return this.http.post<any>(`${this.baseUrl}/Login/CheckRefreshToken`, body).pipe(
-          switchMap((response) => {
+        return this.http.post<any>(
+          `${this.baseUrl}/Login/CheckRefreshToken`,
+          body
+        ).pipe(
+          map(response => {
             if (response.returnInt < 0) {
-              return throwError(() => { });
-            }
-            else {
-              user.refreshToken = response.newRefreshToken;
-              user.token = response.newAccessTokne;
-              console.log(response);
-
-              this.userSubject$.next(user);
-              this.storeVal(user_storage, JSON.stringify(user))
-              return of(user)
+              console.log('refresh failed')
+              throw new Error('Refresh failed');
             }
 
+            const updatedUser = {
+              ...user,
+              token: response.newAccessToken,
+              refreshToken: response.newRefreshToken
+            };
+            
+            this.userSubject$.next(updatedUser);
+            this.storeVal(user_storage, JSON.stringify(updatedUser));
 
+            return updatedUser;
           })
         );
-      }),
+      })
     );
   }
 
@@ -143,16 +149,20 @@ private baseUrl = environment.baseUrl;
   isTokenExpired(token: string): boolean {
     // const timeToAdd = (55 * 60 * 1000)+10000 ;
     const date = this.getTokenExpirationDate(token).valueOf();
+    console.log(date);
+
     if (date === undefined) return false;
-    // console.log((date.valueOf()-new Date().valueOf())/1000);
-    const tokenBuffer = 60 * 1000; // 1 minute buffer
+    // const tokenBuffer = 60 * 1000; // 1 minute buffer
+    const tokenBuffer = 0; // 1 minute buffer
+
+    console.log((date.valueOf() - new Date().valueOf()) / 1000, !(date.valueOf() - tokenBuffer > new Date().valueOf()));
     return !(date.valueOf() - tokenBuffer > new Date().valueOf());
 
   }
 
-  get userValue(): Observable<authUser | null> {
-    return this.userSubject$.asObservable().pipe(map(user => user ? user : null));
-  }
+  public get currentUser(): authUser | null {
+  return this.userSubject$.value;
+}
 
 
   canAdd(): boolean {
@@ -166,7 +176,7 @@ private baseUrl = environment.baseUrl;
   canSee(): boolean {
     let canAdd = false;
     this.user$.pipe(map(user => user!.role), take(1)).subscribe(name => {
-      canAdd = name === 'Administrator' || name === 'SuperHead'|| name === 'HeadOfPlant'|| name === 'HeadOfProduction';
+      canAdd = name === 'Administrator' || name === 'SuperHead' || name === 'HeadOfPlant' || name === 'HeadOfProduction';
     });
     return canAdd;
   }
@@ -177,6 +187,9 @@ private baseUrl = environment.baseUrl;
 
   getUsername(): string | null {
     return this.userSubject$.value ? this.userSubject$.value.userName : null
+  }
+  getUser(): authUser | null {
+    return this.userSubject$.value
   }
 
 }

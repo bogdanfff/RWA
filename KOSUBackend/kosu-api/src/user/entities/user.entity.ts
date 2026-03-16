@@ -1,9 +1,10 @@
+import { Segment } from 'src/segment/entities/segment.entity';
 import { Team } from 'src/team/entities/team.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn({ name: 'userID', type: 'int' })
+  @PrimaryGeneratedColumn({ name: 'userId', type: 'int' })
   id: number;
 
   @Column({ name: 'userName', type: 'nvarchar', length: 255 })
@@ -33,13 +34,23 @@ export class User {
   @Column({ name: 'active', type: 'bit' })
   active: boolean;
 
-  @Column({ name: 'createDate', type: 'datetime' })
+  @Column({ name: 'createDate', type: 'datetime', default: () => 'GETDATE()' })
   createDate: Date;
 
   @Column({ name: 'refreshToken', type: 'nvarchar', length: 255, nullable: true })
   refreshToken: string | null;
 
+  @Column({ name: 'teamId', type: 'int', nullable: true })
+  teamId: number;
+
   @ManyToOne(() => Team, team => team.users, { nullable: true })
+  @JoinColumn({ name: 'teamId' })
   team: Team | null;
+
+  @OneToMany(() => Team, team => team.teamLeader)
+  teamsLeader: Team[];
+
+  @OneToMany(() => Segment, segment => segment.segmentLeader)
+  segmentLeader: Segment[];
 }
 

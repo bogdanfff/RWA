@@ -3,24 +3,37 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import {  provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {TranslateModule, TranslateLoader, provideTranslateService} from "@ngx-translate/core";
-import {provideTranslateHttpLoader, TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClient} from '@angular/common/http';
+import { TranslateModule, TranslateLoader, provideTranslateService } from "@ngx-translate/core";
+import { provideTranslateHttpLoader, TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
 import { jwtInterceptor } from './shared/interceptors/api-key.interceptor';
+import { provideStore } from '@ngrx/store';
+import { teamsReducer } from './store/teams/teams.reducer';
+import { provideEffects } from '@ngrx/effects';
+import { TeamsEffects } from './store/teams/teams.effects';
+import { segmentsReducer } from './store/segments/segments.reducer';
+import { SegmentsEffects } from './store/segments/segments.effects';
+import { UsersEffects } from './store/users/users.effects';
+import { LinesEffects } from './store/lines/lines.effects';
+import { usersReducer } from './store/users/users.reducer';
+import { linesReducer } from './store/lines/lines.reducer';
+import { ErrorEffects } from './store/core/error.effects';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideStore({ teams: teamsReducer, segments: segmentsReducer, lines: linesReducer, users: usersReducer }), // root store
+    provideEffects([TeamsEffects,SegmentsEffects,UsersEffects,LinesEffects,ErrorEffects]),
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([
         jwtInterceptor,
       ])
-    ), 
-     provideTranslateService({
+    ),
+    provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: '/assets/i18n/',
         suffix: '.json'
@@ -29,5 +42,5 @@ export const appConfig: ApplicationConfig = {
       lang: 'en-US'
     }),
     provideAnimationsAsync()
-         ]
+  ]
 };

@@ -1,1 +1,8 @@
-<div></div>
+<app-data-table
+  [loading]="loading$ | async"
+  [data]="segments$ | async"
+  [columns]="columns"
+  [actions]="actions"
+  [pageSize]="5"
+  [addButton]="addButton">
+</app-data-table>

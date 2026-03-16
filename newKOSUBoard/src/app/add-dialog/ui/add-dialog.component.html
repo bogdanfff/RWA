@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>{{ ((edit?'Edit ':'Add ') + data.entity ) | translate }}</h2>
+
+
+<mat-dialog-content style="padding-top: 10px;">
+  <form [formGroup]="form">
+    <ng-container *ngFor="let field of fields">
+
+      <!-- TEXT INPUT -->
+      <mat-form-field *ngIf="field.type !== 'checkbox' && field.type !== 'select'" appearance="outline"
+        class="full-width">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [type]="field.type" [formControlName]="field.name" />
+      </mat-form-field>
+
+      <!-- SELECT -->
+      <mat-form-field *ngIf="field.type === 'select'" appearance="outline" class="full-width">
+        <mat-label>{{ field.label }}</mat-label>
+        <mat-select [formControlName]="field.name">
+          <mat-option *ngFor="let option of field.dropDown | async" [value]="(field.selectValue=='id'?option.id:option.val)">
+            {{ option.val }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- CHECKBOX -->
+      <mat-checkbox *ngIf="field.type === 'checkbox'" [formControlName]="field.name">
+        {{ field.label }}
+      </mat-checkbox>
+
+    </ng-container>
+  </form>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button color="primary" (click)="submit()" [disabled]="form.invalid">Save</button>
+</mat-dialog-actions>

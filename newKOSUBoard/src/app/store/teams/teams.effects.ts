@@ -1,57 +1,63 @@
 // teams.effects.ts
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TeamsService } from '../../teams/data-acces/teams.service';
-import * as TeamsActions from './teams.actions';
+// teams.effects.ts
+import { TeamsActions } from './teams.actions'; // ✅ direktni named import
 import { catchError, map, mergeMap, of } from 'rxjs';
+import { parseHttpError } from '../../shared/functions/parse';
 
 @Injectable()
 export class TeamsEffects {
-  constructor(private actions$: Actions, private teamService: TeamsService) {}
+  private actions$ = inject(Actions);
+  private teamsService = inject(TeamsService);
+  constructor() { }
 
   loadTeams$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TeamsActions.loadTeams),
+      ofType(TeamsActions.load),  // direktno load
       mergeMap(() =>
-        this.teamService.getTeams().pipe(
-          map(teams => TeamsActions.loadTeamsSuccess({ teams })),
-          catchError(error => of(TeamsActions.loadTeamsFailure({ error: error.message })))
+        this.teamsService.list().pipe(
+          map(items => TeamsActions.loadSuccess({ items })),
+          catchError(error => of(TeamsActions.loadFailure({ error: parseHttpError(error) })))
         )
       )
     )
   );
-
+  // Add
   addTeam$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TeamsActions.addTeam),
+      ofType(TeamsActions.add),           // koristimo univerzalni add
       mergeMap(action =>
-        this.teamService.addTeam(action.team).pipe(
-          map(team => TeamsActions.addTeamSuccess({ team })),
-          catchError(error => of(TeamsActions.addTeamFailure({ error: error.message })))
+        this.teamsService.add(action.item).pipe(    // item umesto team
+          map(item => TeamsActions.addSuccess({ item })),  // addSuccess
+          catchError(error => of(TeamsActions.addFailure({ error: parseHttpError(error) })))
         )
       )
     )
   );
 
+  // Update
   updateTeam$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TeamsActions.updateTeam),
+      ofType(TeamsActions.update),
       mergeMap(action =>
-        this.teamService.updateTeam(action.team).pipe(
-          map(team => TeamsActions.updateTeamSuccess({ team })),
-          catchError(error => of(TeamsActions.updateTeamFailure({ error: error.message })))
+        this.teamsService.update(action.item).pipe(
+          map(item => TeamsActions.updateSuccess({ item })),
+          catchError(error => of(TeamsActions.updateFailure({ error: parseHttpError(error) })))
         )
       )
     )
   );
 
+  // Delete
   deleteTeam$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(TeamsActions.deleteTeam),
+      ofType(TeamsActions.delete),
       mergeMap(action =>
-        this.teamService.deleteTeam(action.id).pipe(
-          map(() => TeamsActions.deleteTeamSuccess({ id: action.id })),
-          catchError(error => of(TeamsActions.deleteTeamFailure({ error: error.message })))
+        this.teamsService.delete(action.id).pipe(
+          map(() => TeamsActions.deleteSuccess({ id: action.id })),
+          catchError(error => of(TeamsActions.deleteFailure({ error: parseHttpError(error) })))
         )
       )
     )
