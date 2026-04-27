@@ -1,4 +1,4 @@
-<app-data-table
+<app-data-table #table
 [loading]="loading$ | async"
   [data]="lines$ | async"
   [columns]="columns"
@@ -6,4 +6,5 @@
   [pageSize]="5"
   [addButton]="addButton"
   [assignButton]="assignButton">
+  <app-text-filter table-filters (filterChange)="table.applyFilter($event)"></app-text-filter>
 </app-data-table>

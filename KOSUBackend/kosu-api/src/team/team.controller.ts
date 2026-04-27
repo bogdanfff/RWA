@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
 import { TeamService } from './team.service';
 import { Team } from './entities/team.entity';
 
@@ -16,7 +16,7 @@ export class TeamsController {
         return this.teamsService.create(team)
     }
 
-    @Put(':id')
+    @Patch(':id')
     updateTeam( @Param('id') id: number,@Body() team:Team){
         return this.teamsService.updateTeam(id,team)
     }

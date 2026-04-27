@@ -1,6 +1,7 @@
+import { Hourly } from 'src/hourly/entities/hourly.entity';
 import { Segment } from 'src/segment/entities/segment.entity';
 import { Team } from 'src/team/entities/team.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 
 @Entity('lines')
 export class Line {
@@ -39,9 +40,13 @@ export class Line {
   updateDate: Date;
 
   @Column({ name: 'assignedTeamId', type: 'int', nullable: true })
-  assignedTeamId: number;
+  assignedTeamId: number | null;
 
   @ManyToOne(() => Team, team => team.lines, { nullable: true })
   @JoinColumn({ name: 'assignedTeamId' })
   assignedTeam: Team | null;
+
+  @OneToMany(() => Hourly, hourly => hourly.line)
+  hourlys: Hourly[];
+
 }

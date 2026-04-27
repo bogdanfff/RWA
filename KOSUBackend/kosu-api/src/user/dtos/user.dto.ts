@@ -56,7 +56,7 @@ export interface UserDto {
   roleId: number | null;
   roleName: string
   teamName: string | undefined;
-
+  teamId:number | undefined,
   active: boolean;
   createDate: Date;
 }
@@ -73,6 +73,7 @@ export function mapUserToDto(user: User): UserDto {
     roleId: user.roleId,
     roleName: user.roleName,
     teamName: user.team?.teamName,
+    teamId:user.team?.id,
 
     active: user.active,
     createDate: user.createDate,

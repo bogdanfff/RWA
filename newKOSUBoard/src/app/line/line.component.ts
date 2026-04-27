@@ -14,12 +14,16 @@ import { AddDialogComponent } from "../add-dialog/ui/add-dialog.component";
 import { createTableActions, createAddButton } from "../shared/functions/tableActions";
 import { LinesActions } from "../store/lines/lines.actions";
 import { DialogService } from "../add-dialog/data/dialog.service";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { TableFilterComponent } from "../shared/ui/table/filters/text.filter";
+import { AuthService } from "../auth/data-access/auth.service";
 
 
 @Component({
   selector: 'app-line',
   standalone: true,
-  imports: [TableComponent, AsyncPipe, MatDialogModule],
+  imports: [TableComponent, AsyncPipe, MatInputModule, TableFilterComponent],
   templateUrl: './line.component.html',
   styleUrls: ['./line.component.scss']
 
@@ -34,46 +38,63 @@ export class LineComponent {
   );
 
   addButton = createAddButton('New line', () => this.addOrEditLine());
-  assignButton = createAddButton('Assign', () => this.addOrEditLine());
+  assignButton = createAddButton<Line>('Assign', (line) => this.addOrEditLine(line, true));
 
   readonly dialog = inject(MatDialog);
   readonly store = inject(Store)
   private readonly addEditDialog = inject(DialogService)
+  private readonly auth = inject(AuthService);
+  user = this.auth.getUser()?.userName
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   private destroy$ = new Subject<void>();
 
   lines$: Observable<Line[]>;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
-  linesData = new MatTableDataSource<Line>([]);
   constructor() {
+    
+    this.addUnassignButton()
     this.lines$ = this.store.select(LinesSelectors.selectAllLines);
     this.loading$ = this.store.select(LinesSelectors.selectLinesLoading);
     this.error$ = this.store.select(LinesSelectors.selectLinesError);
 
-    this.lines$.pipe(takeUntil(this.destroy$)).subscribe(lines => this.linesData.data = lines);
+    this.lines$.pipe(takeUntil(this.destroy$))
   }
 
   ngOnInit(): void {
     this.store.dispatch(LinesActions.load());
   }
 
-  ngAfterViewInit() {
-    this.linesData.paginator = this.paginator;
-  }
-
-  addOrEditLine(line?: Line) {
-    this.addEditDialog.open<Line>('line', line, LinesActions);
+  addOrEditLine(line?: Line, assign?: boolean) {
+    this.addEditDialog.open<Line>(
+      assign ? 'assign' : 'line',
+      line, LinesActions,
+      { returnAdditional: { assignedByUser: this.user! } });
   }
 
   deleteLine(id: number) {
     this.store.dispatch(LinesActions.delete({ id }));
   }
 
-  filterTable(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.linesData.filter = filterValue.trim().toLowerCase();
+  unassignTeam(line: Line) {
+    this.store.dispatch(LinesActions.update({
+      item: {
+        ...line, assignedTeamId: null,
+        assignedShift: null,
+        assignedShiftDate: null,
+        assignedTarget: null,
+        assignedByUser: null,
+        assignedEmployeesNo: null
+      }
+    }));
+  }
+  addUnassignButton() {
+    this.actions.push({
+      icon: 'unsubscribe',
+      tooltip: 'Unassign',
+      warn: true,
+      action: (line) => this.unassignTeam(line)
+    })
   }
   ngOnDestroy() {
     this.destroy$.next();

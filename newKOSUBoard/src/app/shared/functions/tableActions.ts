@@ -20,6 +20,6 @@ export function createTableActions<T>(
   ];
 }
 
-export function createAddButton(label: string, addFn: () => void): TableAddButton {
+export function createAddButton<T>(label: string, addFn: (item?:T) => void): TableAddButton {
   return { label, action: addFn };
 }

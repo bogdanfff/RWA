@@ -10,7 +10,10 @@ export class LineResponseDto {
   assignedByUser: string | null;
   assignedEmployeesNo: number | null;
   assignedTeam: string | undefined;
+  assignedTeamId:number | undefined;
+
   segmentName: string;
+  segmentNameId:number;
 }
 
 export function mapLineToDto(line: Line): LineResponseDto {
@@ -24,6 +27,8 @@ export function mapLineToDto(line: Line): LineResponseDto {
     assignedByUser: line.assignedByUser,
     assignedEmployeesNo: line.assignedEmployeesNo,
     assignedTeam: line.assignedTeam?.teamName,
+    assignedTeamId:line.assignedTeam?.id,
     segmentName: line.segmentName.segmentName,
+    segmentNameId:line.segmentName.id
   };
 }

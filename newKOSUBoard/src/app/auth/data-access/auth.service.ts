@@ -59,7 +59,6 @@ export class AuthService {
   }
 
   initializeUser(): Observable<authUser | null> {
-    // this.loadVal(user_storage).then((u)=>console.log(this.userSubject$.getValue()));
     return from(this.loadVal('user_data')).pipe(
       map(storedData => {
 
@@ -147,15 +146,13 @@ export class AuthService {
   }
 
   isTokenExpired(token: string): boolean {
-    // const timeToAdd = (55 * 60 * 1000)+10000 ;
     const date = this.getTokenExpirationDate(token).valueOf();
-    console.log(date);
 
     if (date === undefined) return false;
-    // const tokenBuffer = 60 * 1000; // 1 minute buffer
-    const tokenBuffer = 0; // 1 minute buffer
+    const tokenBuffer = 60 * 1000; // 1 minute buffer
+    // const tokenBuffer = 0; // 1 minute buffer
 
-    console.log((date.valueOf() - new Date().valueOf()) / 1000, !(date.valueOf() - tokenBuffer > new Date().valueOf()));
+    // console.log((date.valueOf() - new Date().valueOf()) / 1000, !(date.valueOf() - tokenBuffer > new Date().valueOf()));
     return !(date.valueOf() - tokenBuffer > new Date().valueOf());
 
   }

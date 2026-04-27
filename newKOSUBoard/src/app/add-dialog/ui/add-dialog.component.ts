@@ -1,7 +1,7 @@
 import { Component, inject, model } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogTitle, MatDialogContent, MatDialogActions, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -11,11 +11,9 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { DialogService } from '../data/dialog.service';
 import { MatOption, MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { Team } from '../../teams/models/teams.model';
-import { Segment } from '../../segment/models/segments.model';
+import { DialogData } from '../../shared/models/globalModels';
 import { Line } from '../../line/models/lines.model';
-import { User } from '../../users/models/users.model';
-import { allEntities, DialogData } from '../../shared/models/globalModels';
+import { Hourly } from '../../hourly/models/hourlies.model';
 @Component({
   selector: 'app-add-dialog',
   standalone: true,
@@ -38,17 +36,19 @@ export class AddDialogComponent<T> {
   edit = this.data.edit
   form!: FormGroup;
   fields!: FormField[];
-
+  filter = this.getFilter()
+  lineName = this.data.entity == 'assign' ? (this.data.value as Line).lineName : ''
   constructor() {
     this.initForm();
   }
-  
+
   ngOnInit() {
   }
 
   initForm() {
-    this.fields = this.dialogService.getSchemas()[this.data.entity];
+    // console.log(this.data.value);
 
+    this.fields = this.dialogService.getSchemas(this.filter)[this.data.entity];
     const group: any = {};
     this.fields.forEach(field => {
       const defaultValue = (this.data.value as any)?.[field.name] ?? '';
@@ -67,5 +67,17 @@ export class AddDialogComponent<T> {
 
   cancel() {
     this.dialogRef.close(null);
+  }
+  getFilter(): any {
+    switch (this.data.entity) {
+      case 'assign':
+        return {
+          segmentId: (this.data.value as Line)?.segmentNameId
+        };
+      case 'hourly':
+         return this.data.dialogAdditional
+      default:
+        return undefined;
+    }
   }
 }

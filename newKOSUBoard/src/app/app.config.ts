@@ -20,12 +20,14 @@ import { LinesEffects } from './store/lines/lines.effects';
 import { usersReducer } from './store/users/users.reducer';
 import { linesReducer } from './store/lines/lines.reducer';
 import { ErrorEffects } from './store/core/error.effects';
-
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { HourliesEffects } from './store/hourlies/hourlies.effects';
+import { hourlysReducer } from './store/hourlies/hourlies.reducer';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideStore({ teams: teamsReducer, segments: segmentsReducer, lines: linesReducer, users: usersReducer }), // root store
-    provideEffects([TeamsEffects,SegmentsEffects,UsersEffects,LinesEffects,ErrorEffects]),
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    provideStore({ teams: teamsReducer, segments: segmentsReducer, lines: linesReducer, users: usersReducer,hourlies:hourlysReducer }), // root store
+    provideEffects([TeamsEffects,SegmentsEffects,UsersEffects,LinesEffects,ErrorEffects,HourliesEffects]),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(

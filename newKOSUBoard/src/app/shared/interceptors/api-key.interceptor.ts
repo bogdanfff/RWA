@@ -17,7 +17,6 @@ export const jwtInterceptor: HttpInterceptorFn = (
   request: HttpRequest<any>,
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
-console.log('Uslo');
 
   const userAut = inject(AuthService);
   const router = inject(Router);

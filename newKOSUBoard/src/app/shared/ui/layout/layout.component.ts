@@ -22,7 +22,7 @@ const hiddenRoutes = ['/settings', '/gameplay', '/store', '/avatarBuilder', '/pr
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css'],
+  styleUrls: ['./layout.component.scss'],
   imports: [RouterModule, ScrollingModule, MatTooltipModule, MatExpansionModule, FormsModule, MatButtonModule, CommonModule, MatSidenavModule, MatMenuModule, MatToolbarModule, MatListModule, MatIconModule, TranslateModule, MatSelectModule, RouterLink],
 
   providers: [],

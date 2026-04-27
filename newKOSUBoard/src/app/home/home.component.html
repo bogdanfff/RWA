@@ -1,3 +1,13 @@
-<div>
-    
+<div style="padding: 3%; margin-top: 25px;">
+    <app-dropdown-filter [teams]="teams$" table-filters (filterChange)="filterHourlies($event)">
+    </app-dropdown-filter>
+    <mat-radio-group (change)="onChange($event)" aria-label="Select an option" style="position: absolute; right: 5%;">
+        <mat-radio-button value="1" checked>{{ 'Absentism'| translate}}</mat-radio-button>
+        <mat-radio-button value="2">{{ 'Efficiency'| translate}}</mat-radio-button>
+    </mat-radio-group>
+    <div style="width: 100%;display: flex;">
+        <canvas baseChart style="max-width: 100%;aspect-ratio:2/1;width:auto;flex-grow: 1;height: auto!important;"
+            [data]="lineChartData$ | async" [options]="lineChartOptions" [type]="'line'">
+        </canvas>
+    </div>
 </div>

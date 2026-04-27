@@ -20,7 +20,8 @@ export const allRoles = [
   active: boolean;
   createDate: Date;
   refreshToken?: string | null;  // Optional since nullable
-  teamName?: Team | null;            // Optional since nullable
+  teamName?: Team ;            // Optional since nullable
+  teamId:number;
 }
 export const columnsUsers: { key: keyof User; label: string; formatter?: (value: any) => string; }[] = [
   { key: 'userName', label: 'Username' },

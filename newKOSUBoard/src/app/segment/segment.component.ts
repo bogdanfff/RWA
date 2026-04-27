@@ -14,12 +14,13 @@ import { createTableActions, createAddButton } from "../shared/functions/tableAc
 import { User } from "../users/models/users.model";
 import { SegmentsActions } from "../store/segments/segments.actions";
 import { DialogService } from "../add-dialog/data/dialog.service";
+import { TableFilterComponent } from "../shared/ui/table/filters/text.filter";
 
 
 @Component({
   selector: 'app-segment',
   standalone: true,
-  imports: [TableComponent, AsyncPipe],
+  imports: [TableComponent, AsyncPipe,TableFilterComponent],
   templateUrl: './segment.component.html',
   styleUrls: ['./segment.component.css']
 })
@@ -41,16 +42,15 @@ export class SegmentComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   private destroy$ = new Subject<void>();
-  segments$: Observable<Segment[]>;       // Observable of all segments
-  loading$: Observable<boolean>;     // Loading state
-  error$: Observable<string | null>; // Error state
-  segmentsData = new MatTableDataSource<Segment>([]);
+  segments$: Observable<Segment[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
   constructor() {
     this.segments$ = this.store.select(SegmentsSelectors.selectAllSegments);
     this.loading$ = this.store.select(SegmentsSelectors.selectSegmentsLoading);
     this.error$ = this.store.select(SegmentsSelectors.selectSegmentsError);
 
-    this.segments$.pipe(takeUntil(this.destroy$)).subscribe(segments => this.segmentsData.data = segments);
+    this.segments$.pipe(takeUntil(this.destroy$))
   }
 
   ngOnInit(): void {
@@ -59,9 +59,6 @@ export class SegmentComponent {
     }, 2000);
     // Load all segments on init
     this.store.dispatch(SegmentsActions.load());
-  }
-  ngAfterViewInit() {
-    this.segmentsData.paginator = this.paginator;
   }
 
   addOrEditSegment(segment?: Segment) {

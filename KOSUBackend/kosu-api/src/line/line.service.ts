@@ -11,7 +11,7 @@ export class LineService {
         private readonly lineRepository: Repository<Line>,
     ) { }
     async findAll(): Promise<LineResponseDto[]> {
-        const linesReturn = await this.lineRepository.find({relations: ['segmentName','assignedTeam']});
+        const linesReturn = await this.lineRepository.find({ relations: ['segmentName', 'assignedTeam'] });
         return linesReturn.map(mapLineToDto)
     }
 
@@ -20,7 +20,7 @@ export class LineService {
         const newLine = await this.lineRepository.save(line);
         const returnLine = await this.lineRepository.findOne({
             where: { id: newLine.id },
-            relations: ['segmentName','assignedTeam'],
+            relations: ['segmentName', 'assignedTeam'],
         });
         if (!returnLine) {
             throw new NotFoundException('Line not saved successfully');
@@ -29,6 +29,7 @@ export class LineService {
     }
 
     async update(id: number, line: Partial<Line>) {
+        
         const updateResult = await this.lineRepository.update(id, line);
 
         if (updateResult.affected === 0) {
@@ -37,7 +38,7 @@ export class LineService {
 
         const updatedLine = await this.lineRepository.findOne({
             where: { id },
-            relations: ['segmentName','assignedTeam'],
+            relations: ['segmentName', 'assignedTeam'],
         });
 
         if (!updatedLine) {

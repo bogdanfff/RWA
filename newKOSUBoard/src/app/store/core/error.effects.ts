@@ -7,6 +7,7 @@ import { TeamsActions } from '../teams/teams.actions';
 import { LinesActions } from '../lines/lines.actions';
 import { SegmentsActions } from '../segments/segments.actions';
 import { UsersActions } from '../users/users.actions';
+import { HourliesActions } from '../hourlies/hourlies.actions';
 
 @Injectable()
 export class ErrorEffects {
@@ -36,6 +37,11 @@ export class ErrorEffects {
         SegmentsActions.addFailure,
         SegmentsActions.updateFailure,
         SegmentsActions.deleteFailure,
+
+        HourliesActions.loadFailure,
+        HourliesActions.addFailure,
+        HourliesActions.updateFailure,
+        HourliesActions.deleteFailure,
       ),
       tap(action => {
         this.snackBar.open(action.error || 'Unknown error', 'Close', {

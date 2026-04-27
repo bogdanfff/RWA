@@ -7,5 +7,5 @@ export interface TableAction<T> {
 }
 export interface TableAddButton {
   label: string;
-  action: () => void;
+  action: (item?:any) => void;
 }

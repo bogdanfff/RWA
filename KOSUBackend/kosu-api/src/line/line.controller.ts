@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
 import { LineService } from './line.service';
 import { Line } from './entities/line.entity';
 
@@ -15,7 +15,7 @@ export class LineController {
         return this.lineService.create(line);
     }
 
-    @Put(':id')
+    @Patch(':id')
     updateline(
         @Param('id') id: number,
         @Body() lineData: Partial<Line>,

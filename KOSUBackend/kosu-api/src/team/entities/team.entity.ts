@@ -1,3 +1,4 @@
+import { Hourly } from 'src/hourly/entities/hourly.entity';
 import { Line } from 'src/line/entities/line.entity';
 import { Segment } from 'src/segment/entities/segment.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -36,4 +37,7 @@ export class Team {
   @ManyToOne(() => User, user => user.teamsLeader, { nullable: true })
   @JoinColumn({ name: 'teamLeaderId' })
   teamLeader?: User;
+
+  @OneToMany(() => Hourly, hourly => hourly.team)
+    hourlys: Hourly[];
 }

@@ -22,7 +22,7 @@ export abstract class BaseService<T extends { id: number | string }> {
 
   update(item: T & {id:number}): Observable<T> {
     const {id ,...updateData} = item
-    return this.http.put<T>(
+    return this.http.patch<T>(
       `${this.baseUrl}/${this.endpoint}/${id}`,
       updateData
     );

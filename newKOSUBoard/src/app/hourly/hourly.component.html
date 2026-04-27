@@ -1,0 +1,12 @@
+<app-data-table #table
+  [loading]="loading$ | async"
+  [data]="hourlies$ | async"
+  [columns]="columns"
+  [actions]="actions"
+  [pageSize]="5"
+  [addButton]="addButton">
+  <app-dropdown-filter 
+    [teams]="teams$" table-filters 
+    (filterChange)="filterHourlies($event)">
+  </app-dropdown-filter>
+</app-data-table>

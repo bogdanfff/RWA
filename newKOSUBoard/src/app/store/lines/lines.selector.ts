@@ -18,3 +18,13 @@ export const selectLinesError = createSelector(
   selectLinesState,
   (state: LinesState) => state.error
 );
+
+export const selectLinesWithAssignedTeam = createSelector(
+  selectAllLines,
+  (lines) => lines.filter(line => line.assignedTeam)
+);
+
+export const selectLineByTeamId = (teamId: number) => createSelector(
+  selectAllLines,
+  (lines) => lines.find(line => line.assignedTeamId === teamId)
+);

@@ -71,8 +71,8 @@ export class TableComponent<T> implements AfterViewInit {
     this.dataSource.data = this.data!;
   }
 
-  applyFilter(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
+  applyFilter(event: string) {
+    const value = event
     this.dataSource.filter = value.trim().toLowerCase();
 
     if (this.dataSource.paginator) {
@@ -82,8 +82,6 @@ export class TableComponent<T> implements AfterViewInit {
 
   confirm(row: T, action: { action: (row: T) => void }, message: string = 'Are you sure you want to proceed?') {
     
-    console.log('aaaaaaaaaaaaa');
-    
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '300px',
       data: { title: 'Warning', message }
@@ -91,8 +89,7 @@ export class TableComponent<T> implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('User clicked Yes');
-        action.action(row); // izvrši originalnu akciju
+        action.action(row);
       } else {
         console.log('User clicked Cancel');
       }

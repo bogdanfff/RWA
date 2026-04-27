@@ -29,4 +29,3 @@ import { CrudActions, createCrudActions } from "../core/crud.actions";
 
 
 export const TeamsActions: CrudActions<Team> = createCrudActions<Team>('Teams');
-console.log('TeamsActions =', TeamsActions);

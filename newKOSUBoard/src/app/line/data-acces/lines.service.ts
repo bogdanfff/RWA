@@ -11,4 +11,14 @@ export class LinesService extends BaseService<Line> {
   constructor(http: HttpClient) {
     super(http, environment.baseUrl);
   }
+  // assign(item: Partial<Line>) {
+  //   const { id, ...updateData } = item
+  //   this.http.patch(`/api/lines/${id}/assign`, {
+  //     assignedTeamId: updateData.assignedTeam,
+  //     assignedShift: updateData.assignedShift,
+  //     assignedShiftDate: updateData.assignedShiftDate, // Date -> ISO string
+  //     assignedTarget: updateData.assignedTarget,
+  //     assignedEmployeesNo: updateData.assignedEmployeesNo
+  //   })
+  // }
 }

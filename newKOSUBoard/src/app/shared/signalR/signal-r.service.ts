@@ -25,8 +25,8 @@
 //       'ApiKey': `${this.apiKey}`
 //     });
 //     return this.http.get<hourlyData[]>(`${this.baseUrl}/public/GetHourlyInsertForTeam/${team}`, { headers })
-//     .pipe(tap(hourlys=>{
-//       this.hourlySubjectView.next(hourlys.sort(sortByProperty('shiftPatternId',true)))
+//     .pipe(tap(hourlies=>{
+//       this.hourlySubjectView.next(hourlies.sort(sortByProperty('shiftPatternId',true)))
 //     }
 //     )
 //   )
@@ -61,16 +61,16 @@
 //       .then(() => console.log('Connection stopped'))
 //       .catch(err => console.log('Error while stopping connection: ' + err));
 //   }
-//   private onInserted = (hourlys: hourlyData[],teamName:string): void => {
-//     console.log('New message received from server:', hourlys);
-//     this.hourlySubjectView.next(hourlys);
+//   private onInserted = (hourlies: hourlyData[],teamName:string): void => {
+//     console.log('New message received from server:', hourlies);
+//     this.hourlySubjectView.next(hourlies);
 //     this.updatedTeam.next(teamName);
 //     // Process the message further, e.g., display it to the user
 //   }
 
-//   private onDeleted = (hourlys: hourlyData[],teamName:string): void => {
-//     console.log('New message received from server:', hourlys);
-//     this.hourlySubjectView.next(hourlys);
+//   private onDeleted = (hourlies: hourlyData[],teamName:string): void => {
+//     console.log('New message received from server:', hourlies);
+//     this.hourlySubjectView.next(hourlies);
 //     this.updatedTeam.next(teamName);
 //     // Process the message further, e.g., display it to the user
 //   }

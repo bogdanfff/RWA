@@ -23,7 +23,6 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
   getProfile(@Request() req) {
-    // Only accessible with valid JWT
     return req.user;
   }
 }

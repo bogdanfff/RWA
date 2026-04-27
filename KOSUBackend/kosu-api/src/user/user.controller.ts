@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserDto, UserDto } from './dtos/user.dto';
@@ -24,7 +24,7 @@ export class UserController {
         return this.userService.create(userData);
     }
 
-    @Put(':id')
+    @Patch(':id')
     updateUser(
         @Param('id') id: number,
         @Body() userData: Partial<User>,

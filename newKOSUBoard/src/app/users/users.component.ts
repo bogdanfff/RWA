@@ -13,11 +13,12 @@ import { AddDialogComponent } from "../add-dialog/ui/add-dialog.component";
 import { createTableActions, createAddButton } from "../shared/functions/tableActions";
 import { UsersActions } from "../store/users/users.actions";
 import { DialogService } from "../add-dialog/data/dialog.service";
+import { TableFilterComponent } from "../shared/ui/table/filters/text.filter";
 
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [AsyncPipe, TableComponent],
+  imports: [AsyncPipe, TableComponent,TableFilterComponent],
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss']
 })
@@ -35,26 +36,21 @@ export class UsersComponent {
   readonly store = inject(Store)
   private readonly addEditDialog = inject(DialogService)
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   private destroy$ = new Subject<void>();
-  users$: Observable<User[]>;       // Observable of all users
-  loading$: Observable<boolean>;     // Loading state
-  error$: Observable<string | null>; // Error state
-  usersData = new MatTableDataSource<User>([]);
+  users$: Observable<User[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
   constructor() {
     this.users$ = this.store.select(UsersSelectors.selectAllUsers);
     this.loading$ = this.store.select(UsersSelectors.selectUsersLoading);
     this.error$ = this.store.select(UsersSelectors.selectUsersError);
 
-    this.users$.pipe(takeUntil(this.destroy$)).subscribe(users => this.usersData.data = users);
+    this.users$.pipe(takeUntil(this.destroy$))
   }
 
   ngOnInit(): void {
     // Load all users on init
     this.store.dispatch(UsersActions.load());
-  }
-  ngAfterViewInit() {
-    this.usersData.paginator = this.paginator;
   }
 
   addOrEditUser(user?: User) {
@@ -68,10 +64,7 @@ export class UsersComponent {
   deleteUser(id: number) {
     this.store.dispatch(UsersActions.delete({ id }));
   }
-  filterTable(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.usersData.filter = filterValue.trim().toLowerCase();
-  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

@@ -82,6 +82,7 @@ export class UserService {
     return mapUserToDto(updatedUser);
   }
 
+  
   async delete(id: string) {
     const result = await this.userRepository.delete(id);
 

@@ -11,6 +11,7 @@ import { LineModule } from './line/line.module';
 import { SegmentModule } from './segment/segment.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { HourlyModule } from './hourly/hourly.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
        LineModule,
        SegmentModule,
        AuthModule,
+       HourlyModule
   ],
   controllers: [AppController],
   providers: [AppService],

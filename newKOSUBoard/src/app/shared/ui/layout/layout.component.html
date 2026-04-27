@@ -1,7 +1,7 @@
 <div class="page">
   <mat-drawer-container class="whole" autosize>
 
-    <mat-drawer #drawer class="side" opened position="start" mode="side">
+    <mat-drawer #drawer class="side" opened position="start" mode="side" style="scrollbar-width: none;">
       <div class="side-scroll">
         <mat-nav-list class="side-items">
 
@@ -13,7 +13,7 @@
           <div class="border"></div>
 
           <!-- Home -->
-          <mat-list-item routerLink="/statistics">
+          <mat-list-item routerLink="/home">
             <a mat-button class="home">{{ 'Home page' | translate }}</a>
           </mat-list-item>
 
@@ -24,22 +24,13 @@
             </mat-expansion-panel-header>
 
             <ng-container>
-              <mat-list-item routerLink="/assignTeam">
-                <a mat-button><mat-icon>swap_horiz</mat-icon>{{ 'Assign teams' | translate }}</a>
-              </mat-list-item>
-
+              
               <mat-list-item routerLink="/hourly">
                 <a mat-button><mat-icon>hourglass_empty</mat-icon>{{ 'Hourly input' | translate }}</a>
               </mat-list-item>
 
-              <mat-list-item routerLink="/comments">
-                <a mat-button><mat-icon>comment</mat-icon>{{ 'Comments' | translate }}</a>
-              </mat-list-item>
             </ng-container>
 
-            <mat-list-item routerLink="/incidentInput">
-              <a mat-button><mat-icon>input</mat-icon>{{ 'Incident input' | translate }}</a>
-            </mat-list-item>
           </mat-expansion-panel>
 
           <!-- Structure -->
@@ -59,7 +50,7 @@
         </mat-nav-list>
       </div>
     </mat-drawer>
-    <mat-drawer-content class="drawer-container" style="height: auto;">
+    <mat-drawer-content class="drawer-container" style="height: auto;min-height: 100vh;">
 
       <div class="header-div" style="border-bottom: 3px solid #f0f0f0;">
         <button class="menuBtn" (click)="drawer.toggle()"><mat-icon>menu</mat-icon></button>

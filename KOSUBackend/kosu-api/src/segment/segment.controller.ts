@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
 import { SegmentService } from './segment.service';
 import { Segment } from './entities/segment.entity';
 import { SegmentDto } from './dtos/segment.dto';
@@ -16,7 +16,7 @@ export class SegmentController {
         return this.segmentsService.create(segment);
     }
 
-    @Put(':id')
+    @Patch(':id')
     updateSegment(
         @Param('id') id: number,
         @Body() segmentData: Partial<Segment>,

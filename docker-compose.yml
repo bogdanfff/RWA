@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+
+  db:
+      image: mcr.microsoft.com/mssql/server:2025-latest
+      container_name: sql2
+      environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Mojasifra1@"
+      ports:
+        - "1433:1433"
+      networks:
+        - kosu-net
+
+  backend:
+    build:
+      context: ./KOSUBackend/kosu-api
+      dockerfile: Dockerfile
+    container_name: kosu-backend
+    ports:
+      - "4000:3000"
+    depends_on:
+        - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 1433
+      DB_USERNAME: sa
+      DB_PASSWORD: Mojasifra1@
+      DB_NAME: master
+    networks:
+      - kosu-net
+
+  frontend:
+    build:
+      context: ./newKOSUBoard
+      dockerfile: Dockerfile
+    container_name: kosu-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - kosu-net
+
+networks:
+  kosu-net:

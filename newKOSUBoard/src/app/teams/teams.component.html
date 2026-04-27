@@ -51,11 +51,12 @@
     @else if (error$ |async) {
     ERROR
     } -->
-    <app-data-table
+    <app-data-table #table
     [loading]="loading$ | async"
   [data]="teams$ | async "
   [columns]="columns"
   [actions]="actions"
   [pageSize]="5"
   [addButton]="addButton">
+  <app-text-filter table-filters (filterChange)="table.applyFilter($event)"></app-text-filter>
 </app-data-table>

@@ -8,10 +8,10 @@ export interface Segment {
   createDate: string; // ISO string from backend
 }
 export const columnsSegments: { key: keyof Segment; label: string;formatter?: (value: any) => string; }[] = [
-  { key: 'segmentName', label: 'Segment name' },
-  { key: 'segmentLeader', label: 'Segment leader' },
+  { key: 'segmentName', label: 'Segment Name' },
+  { key: 'segmentLeader', label: 'Segment Leader' },
   { key: 'description', label: 'Description' },
-  { key: 'createDate', label: 'Created at' , formatter: (value: string) =>new Date(value).toLocaleDateString('sr-RS')
+  { key: 'createDate', label: 'Created At' , formatter: (value: string) =>new Date(value).toLocaleDateString('sr-RS')
   },
   
 ] as const;

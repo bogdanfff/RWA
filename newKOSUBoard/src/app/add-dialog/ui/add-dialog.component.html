@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ ((edit?'Edit ':'Add ') + data.entity ) | translate }}</h2>
+<h2 mat-dialog-title>{{ ((edit?'Edit ':'Add ') + data.entity + ' ' + lineName ) | translate }}</h2>
 
 
 <mat-dialog-content style="padding-top: 10px;">
@@ -8,18 +8,33 @@
       <!-- TEXT INPUT -->
       <mat-form-field *ngIf="field.type !== 'checkbox' && field.type !== 'select'" appearance="outline"
         class="full-width">
-        <mat-label>{{ field.label }}</mat-label>
+        <mat-label>{{ field.label | translate }}</mat-label>
         <input matInput [type]="field.type" [formControlName]="field.name" />
+        <mat-error
+          *ngIf="form.get(field.name)?.invalid && (form.get(field.name)?.touched || form.get(field.name)?.dirty)">
+          {{ field.errorText }}
+        </mat-error>
       </mat-form-field>
+
+      <!-- <mat-form-field *ngIf="field.type === 'date'" appearance="outline" class="full-width">
+        <mat-label>{{ field.label }}</mat-label>
+        <input matInput [matDatepicker]="picker" [formControlName]="field.name">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field> -->
 
       <!-- SELECT -->
       <mat-form-field *ngIf="field.type === 'select'" appearance="outline" class="full-width">
-        <mat-label>{{ field.label }}</mat-label>
+        <mat-label>{{ field.label |translate}}</mat-label>
         <mat-select [formControlName]="field.name">
-          <mat-option *ngFor="let option of field.dropDown | async" [value]="(field.selectValue=='id'?option.id:option.val)">
+          <mat-option *ngFor="let option of field.dropDown | async" [disabled]="option.disabled"
+            [value]="(field.selectValue=='id' ? option.id : option.val)">
             {{ option.val }}
           </mat-option>
         </mat-select>
+        <mat-error *ngIf="(field.dropDown | async)?.length === 0">
+          No available values
+        </mat-error>
       </mat-form-field>
 
       <!-- CHECKBOX -->
