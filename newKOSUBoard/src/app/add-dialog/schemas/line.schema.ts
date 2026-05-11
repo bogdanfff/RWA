@@ -5,6 +5,7 @@ import * as SegmentsSelectors from '../../store/segments/segments.selector';
 import { SegmentsActions } from '../../store/segments/segments.actions';
 import { tap, map } from 'rxjs';
 
+
 export function getLineSchema(store: Store): FormField[] {
   return [
     {
@@ -20,14 +21,14 @@ export function getLineSchema(store: Store): FormField[] {
       type: 'select',
       validators: [Validators.required],
       selectValue: 'id',
-      dropDown: store.select(SegmentsSelectors.selectAllSegments).pipe(
-        tap(segments => {
-          if (!segments || segments.length === 0) {
+      dropDown: store.select(SegmentsSelectors.selectSegmentsState).pipe(
+        tap(state => {
+          if (!state.loaded && !state.loading) {
             store.dispatch(SegmentsActions.load());
           }
         }),
-        map(segments =>
-          segments.map(s => ({
+        map(state =>
+          state.segments.map(s => ({
             id: s.id,
             val: s.segmentName
           }))

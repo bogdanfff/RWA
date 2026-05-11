@@ -15,6 +15,11 @@ export const selectTeamsLoading = createSelector(
   (state: TeamsState) => state.loading
 );
 
+export const selectTeamsLoaded = createSelector(
+  selectTeamsState,
+  (state: TeamsState) => state.loaded
+);
+
 export const selectTeamsError = createSelector(
   selectTeamsState,
   (state: TeamsState) => state.error
@@ -26,6 +31,25 @@ export const selectTeamsWithAssignedLines = createSelector(
   (teams, lines) => {
     const assignedTeamNames = new Set(lines.map(line => line.assignedTeam));
     return teams.filter(team => assignedTeamNames.has(team.teamName));
+  }
+);
+
+export const selectAssignedTeams = createSelector(
+  selectTeamsState,
+  LinesSelectors.selectAllLines,
+  (state, lines) => {
+    const assignedTeamIds = new Set(
+      lines
+        .filter(l => l.assignedTeamId)
+        .map(l => l.assignedTeamId)
+    );
+
+    return state.teams
+      .filter(t => !assignedTeamIds.has(t.id))
+      .map(t => ({
+        id: t.id,
+        val: t.teamName
+      }));
   }
 );
 

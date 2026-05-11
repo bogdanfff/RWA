@@ -15,15 +15,19 @@ import { HourlyModule } from './hourly/hourly.module';
 
 @Module({
   imports: [
-       TypeOrmModule.forRoot(typeOrmConfig),
-       TeamsModule,
-       UserModule,
-       LineModule,
-       SegmentModule,
-       AuthModule,
-       HourlyModule
+    TypeOrmModule.forRoot({
+      ...typeOrmConfig,
+      retryAttempts: 20,
+      retryDelay: 5000,
+    }),
+    TeamsModule,
+    UserModule,
+    LineModule,
+    SegmentModule,
+    AuthModule,
+    HourlyModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

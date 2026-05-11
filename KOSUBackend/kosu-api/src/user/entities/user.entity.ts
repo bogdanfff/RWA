@@ -41,7 +41,7 @@ export class User {
   refreshToken: string | null;
 
   @Column({ name: 'teamId', type: 'int', nullable: true })
-  teamId: number;
+  teamId: number | null;
 
   @ManyToOne(() => Team, team => team.users, { nullable: true })
   @JoinColumn({ name: 'teamId' })

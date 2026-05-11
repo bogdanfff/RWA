@@ -3,27 +3,33 @@ FROM node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# install pnpm
+RUN npm install -g pnpm
 
+# copy lock + package
+COPY package.json pnpm-lock.yaml ./
+
+# install deps
+RUN pnpm install --frozen-lockfile
+
+# copy source
 COPY . .
 
-RUN npm run build
+# build angular app
+RUN pnpm run build
 
 
-# Stage 2: serve (NO nginx)
+# Stage 2: serve
 FROM node:20-alpine
 
 WORKDIR /app
 
-# install serve globally
+# install serve
 RUN npm install -g serve
 
-# copy build output (Angular 19)
+# copy build output
 COPY --from=build /app/dist /app/dist
 
-# expose port
 EXPOSE 80
 
-# start serve
 CMD ["serve", "-s", "dist/new-kosuboard/browser", "-l", "80"]

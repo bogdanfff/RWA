@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import * as TeamSelectors from '../../store/teams/teams.selector';
 import { TeamsActions } from '../../store/teams/teams.actions';
 import { allRoles } from '../../users/models/users.model';
-import { of, map, tap } from 'rxjs';
+import { of, map, tap, combineLatest } from 'rxjs';
 
 export function getUserSchema(store: Store): FormField[] {
     return [
@@ -43,14 +43,16 @@ export function getUserSchema(store: Store): FormField[] {
             name: 'teamId',
             label: 'Team',
             type: 'select',
-            validators: [Validators.required],
             selectValue: 'id',
-            dropDown: store.select(TeamSelectors.selectAllTeams).pipe(
-                tap(teams => {
-                    if (!teams || teams.length === 0) {
+            dropDown: store.select(TeamSelectors.selectTeamsState).pipe(
+                tap(state => {
+                    if (!state.loaded && !state.loading) {
                         store.dispatch(TeamsActions.load());
                     }
-                }), map(teams => teams.map(s => ({ id: s.id, val: s.teamName })))
+                }), map(state => state.teams.map(s => ({ id: s.id, val: s.teamName }
+                )
+                )
+                )
             )
         },
         {

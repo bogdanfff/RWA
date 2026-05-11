@@ -6,8 +6,8 @@ export const segmentsReducer = createReducer(
   initialSegmentsState,
 
   on(SegmentsActions.load, state => ({ ...state, loading: true })),
-  on(SegmentsActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, segments: items })),
-  on(SegmentsActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(SegmentsActions.loadSuccess, (state, { items }) => ({ ...state, loading: false,loaded:true, segments: items })),
+  on(SegmentsActions.loadFailure, (state, { error }) => ({ ...state, loading: false,loaded:true, error })),
 
   on(SegmentsActions.addSuccess, (state, { item }) => ({ ...state, segments: [item, ...state.segments] })),
   on(SegmentsActions.addFailure, (state, { error }) => ({ ...state, error })),

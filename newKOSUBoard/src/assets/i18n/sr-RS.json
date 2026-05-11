@@ -96,7 +96,7 @@
     "Edit": "Izmeni",
     "Assign team to": "Dodeli tim liniji",
     "Assign": "Dodeli",
-    "Add hourly input": "Dodaj satni unos",
+    "Add hourly": "Dodaj satni unos",
     "Create segment": "Dodaj segment",
     "Edit segment": "Izmeni segment",
     "Create line": "Dodaj liniju",
@@ -105,6 +105,8 @@
     "Edit user": "Izmeni korisnika",
     "Create team": "Dodaj tim",
     "Edit team": "Izmeni tim",
+    "Edit hourly": "Izmeni satični unos",
+    "Assign on":"Dodeli na",
     "Required": "Obavezno polje",
     "Produced product number": "Broj proizvedenih proizvoda",
     "Add line": "Dodaj liniju",
@@ -188,5 +190,6 @@
     "Inserted By": "Uneo",
     "Komentar": "Komentar",
     "Created At":"Napravljeno",
-    "Assigned By":"Dodelio"
+    "Assigned By":"Dodelio",
+    "Are you sure you want to proceed?":"Da li ste sigurni da želite da nastavite?"
 }

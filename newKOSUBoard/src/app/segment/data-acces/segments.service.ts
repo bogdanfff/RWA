@@ -1,7 +1,7 @@
 // segments.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../enviroments/environment';
+import { environment } from '../../../environments/environment';
 import { Segment } from '../models/segments.model';
 import { BaseService } from '../../shared/services/base.service';
 

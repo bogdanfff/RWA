@@ -7,8 +7,8 @@ export const teamsReducer = createReducer(
 
   // Load
   on(TeamsActions.load, state => ({ ...state, loading: true })),
-  on(TeamsActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, teams: items })),
-  on(TeamsActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(TeamsActions.loadSuccess, (state, { items }) => ({ ...state, loading: false,loaded:true, teams: items })),
+  on(TeamsActions.loadFailure, (state, { error }) => ({ ...state, loading: false,loaded:true, error })),
 
   // Add
   on(TeamsActions.addSuccess, (state, { item }) => ({ ...state, teams: [item, ...state.teams] })),

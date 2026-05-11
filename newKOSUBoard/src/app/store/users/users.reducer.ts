@@ -6,8 +6,8 @@ export const usersReducer = createReducer(
   initialUsersState,
 
   on(UsersActions.load, state => ({ ...state, loading: true })),
-  on(UsersActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, users: items })),
-  on(UsersActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(UsersActions.loadSuccess, (state, { items }) => ({ ...state, loading: false,loaded:true, users: items })),
+  on(UsersActions.loadFailure, (state, { error }) => ({ ...state, loading: false,loaded:true, error })),
 
   on(UsersActions.addSuccess, (state, { item }) => ({ ...state, users: [item, ...state.users] })),
   on(UsersActions.addFailure, (state, { error }) => ({ ...state, error })),

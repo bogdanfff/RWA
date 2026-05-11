@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { environment } from "../../../enviroments/environment";
+import { environment } from "../../../environments/environment";
 import { BaseService } from "../../shared/services/base.service"
 import { Hourly } from "../models/hourlies.model";
 import { Observable } from "rxjs";

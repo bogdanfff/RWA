@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TableAddButton } from './models/table.model';
 import { ConfirmationDialogComponent } from '../../components/confirmation.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -52,7 +52,7 @@ export class TableComponent<T> implements AfterViewInit {
   @Input() addButton!: TableAddButton
   @Input() assignButton!: TableAddButton
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  readonly translateService = inject(TranslateService)
   readonly dialog = inject(MatDialog);
   dataSource = new MatTableDataSource<T>();
 
@@ -80,7 +80,7 @@ export class TableComponent<T> implements AfterViewInit {
     }
   }
 
-  confirm(row: T, action: { action: (row: T) => void }, message: string = 'Are you sure you want to proceed?') {
+  confirm(row: T, action: { action: (row: T) => void }, message: string = this.translateService.instant('Are you sure you want to proceed?')) {
     
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '300px',

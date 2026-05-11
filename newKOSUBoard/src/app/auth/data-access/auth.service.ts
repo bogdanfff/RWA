@@ -1,11 +1,13 @@
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, firstValueFrom, from, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { environment } from '../../../enviroments/environment';
+import { environment } from '../../../environments/environment';
 import { Preferences } from '@capacitor/preferences';
 import { authUser } from './auth.model';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../../users/models/users.model';
+import { Store } from '@ngrx/store';
+import { clearState } from '../../store/core/app.actions';
 
 const user_storage = 'user_data'
 // const DAILY_GIFT = 'is_daily_claimed'
@@ -16,6 +18,7 @@ const user_storage = 'user_data'
 
 export class AuthService {
   private baseUrl = environment.baseUrl;
+  private readonly store = inject(Store);
   private readonly http = inject(HttpClient)
   private userSubject$ = new BehaviorSubject<authUser | null>(null);
   user$ = this.userSubject$.asObservable();
@@ -51,7 +54,7 @@ export class AuthService {
 
       this.userSubject$.next(null);
       this.loggedIn.next(false);
-
+      this.store.dispatch(clearState());
       return { message: 'Logged out', success: true };
     } catch (err) {
       return { message: "Couldn't log out", success: false };
@@ -62,7 +65,7 @@ export class AuthService {
     return from(this.loadVal('user_data')).pipe(
       map(storedData => {
 
-        // console.log(storedData);
+        console.log('uslo u initialize');
 
         if (!storedData) {
           this.loggedIn.next(false)
@@ -90,11 +93,6 @@ export class AuthService {
     return value || null;
   }
 
-  // storeToken(token: string) {
-  //   localStorage.setItem('token', token);
-  //   this.storageVal('token',token)
-  // }
-
   refreshAccessToken(): Observable<authUser> {
     return this.userSubject$.pipe(
       take(1),
@@ -103,30 +101,25 @@ export class AuthService {
           return throwError(() => new Error('No user found'));
         }
 
-        const body = {
-          refreshToken: user.refreshToken
-        };
-
         return this.http.post<any>(
           `${this.baseUrl}/Login/CheckRefreshToken`,
-          body
+          { refreshToken: user.refreshToken }
         ).pipe(
-          map(response => {
+          switchMap(response => {
             if (response.returnInt < 0) {
-              console.log('refresh failed')
-              throw new Error('Refresh failed');
+              return throwError(() => new Error('Refresh failed'));
             }
 
-            const updatedUser = {
+            const updatedUser: authUser = {
               ...user,
               token: response.newAccessToken,
               refreshToken: response.newRefreshToken
             };
-            
+
             this.userSubject$.next(updatedUser);
             this.storeVal(user_storage, JSON.stringify(updatedUser));
 
-            return updatedUser;
+            return of(updatedUser);
           })
         );
       })
@@ -158,24 +151,7 @@ export class AuthService {
   }
 
   public get currentUser(): authUser | null {
-  return this.userSubject$.value;
-}
-
-
-  canAdd(): boolean {
-    let canAdd = false;
-    this.user$.pipe(map(user => user!.role), take(1)).subscribe(name => {
-      canAdd = name === 'Administrator' || name === 'SegmentLeader';
-    });
-    return canAdd;
-  }
-
-  canSee(): boolean {
-    let canAdd = false;
-    this.user$.pipe(map(user => user!.role), take(1)).subscribe(name => {
-      canAdd = name === 'Administrator' || name === 'SuperHead' || name === 'HeadOfPlant' || name === 'HeadOfProduction';
-    });
-    return canAdd;
+    return this.userSubject$.value;
   }
 
   getRole(): string | null {
@@ -185,8 +161,28 @@ export class AuthService {
   getUsername(): string | null {
     return this.userSubject$.value ? this.userSubject$.value.userName : null
   }
+
   getUser(): authUser | null {
     return this.userSubject$.value
   }
+
+
+  // canAdd(): boolean {
+  //   let canAdd = false;
+  //   this.user$.pipe(map(user => user!.role), take(1)).subscribe(name => {
+  //     canAdd = name === 'Administrator' || name === 'SegmentLeader';
+  //   });
+  //   return canAdd;
+  // }
+
+  // canSee(): boolean {
+  //   let canAdd = false;
+  //   this.user$.pipe(map(user => user!.role), take(1)).subscribe(name => {
+  //     canAdd = name === 'Administrator' || name === 'SuperHead' || name === 'HeadOfPlant' || name === 'HeadOfProduction';
+  //   });
+  //   return canAdd;
+  // }
+
+
 
 }

@@ -5,7 +5,7 @@ import { MatDialogTitle, MatDialogContent, MatDialogActions, MAT_DIALOG_DATA, Ma
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FormField } from '../models';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { DialogService } from '../data/dialog.service';
@@ -30,6 +30,7 @@ import { Hourly } from '../../hourly/models/hourlies.model';
   styleUrl: './add-dialog.component.scss'
 })
 export class AddDialogComponent<T> {
+  readonly translateService = inject(TranslateService)
   readonly dialogRef = inject(MatDialogRef<AddDialogComponent<T>>);
   readonly dialogService = inject(DialogService)
   readonly data = inject(MAT_DIALOG_DATA) as DialogData<T>;
@@ -51,8 +52,12 @@ export class AddDialogComponent<T> {
     this.fields = this.dialogService.getSchemas(this.filter)[this.data.entity];
     const group: any = {};
     this.fields.forEach(field => {
-      const defaultValue = (this.data.value as any)?.[field.name] ?? '';
+      const defaultValue =
+        (this.data.value as any)?.[field.name] ??
+        (field.type === 'select' ? null : '');
       group[field.name] = new FormControl(defaultValue, field.validators || []);
+      // const defaultValue = (this.data.value as any)?.[field.name] ?? '';
+      // group[field.name] = new FormControl(defaultValue, field.validators || []);
     });
 
     this.form = new FormGroup(group);
@@ -75,9 +80,14 @@ export class AddDialogComponent<T> {
           segmentId: (this.data.value as Line)?.segmentNameId
         };
       case 'hourly':
-         return this.data.dialogAdditional
+        return this.data.dialogAdditional
       default:
         return undefined;
     }
+  }
+  getTitle() {
+    const ed = this.lineName ? '' : (this.edit ? 'Edit ' : 'Add ')
+    const result = this.lineName ? (this.data.entity.charAt(0).toUpperCase() + this.data.entity.slice(1) + ' on') : this.data.entity;
+    return this.translateService.instant(((ed) + result)) + ` ${this.lineName}`
   }
 }

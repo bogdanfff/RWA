@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { SegmentService } from './segment.service';
 import { Segment } from './entities/segment.entity';
 import { SegmentDto } from './dtos/segment.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('Segments')
 export class SegmentController {
     constructor(private readonly segmentsService: SegmentService) { }

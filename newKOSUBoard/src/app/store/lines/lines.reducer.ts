@@ -6,8 +6,8 @@ export const linesReducer = createReducer(
   initialLinesState,
 
   on(LinesActions.load, state => ({ ...state, loading: true })),
-  on(LinesActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, lines: items })),
-  on(LinesActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(LinesActions.loadSuccess, (state, { items }) => ({ ...state, loading: false,loaded:true, lines: items })),
+  on(LinesActions.loadFailure, (state, { error }) => ({ ...state, loading: false,loaded:true, error })),
 
   on(LinesActions.addSuccess, (state, { item }) => ({ ...state, lines: [item, ...state.lines] })),
   on(LinesActions.addFailure, (state, { error }) => ({ ...state, error })),

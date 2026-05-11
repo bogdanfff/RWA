@@ -5,6 +5,7 @@ import { Between, Repository } from 'typeorm';
 import { HourlyResponseDto, mapHourlyToDto } from './dtos/hourly.dto';
 import { Line } from 'src/line/entities/line.entity';
 import { validateHourlyDate } from './helper/check-date';
+import { calculateEfficiency, calculateAbsentism } from './helper/calculate.helper';
 
 @Injectable()
 export class HourlyService {
@@ -14,20 +15,7 @@ export class HourlyService {
         @InjectRepository(Line)
         private readonly lineRepository: Repository<Line>,
     ) { }
-
-    // ---- POMOĆNE FUNKCIJE ----
-
-    private calculateEfficiency(produced: number, target: number): number {
-        if (!target) return 0;
-        return Math.min(+((produced / target) * 100).toFixed(2), 999.99);
-    }
-
-    private calculateAbsentism(actual: number, planned: number): number {
-        if (!planned) return 0;
-        const absent = planned - actual;
-        return Math.min(+((absent / planned) * 100).toFixed(2), 999.99);
-    }
-
+    
     private async getLine(lineId?: number, fallbackId?: number): Promise<Line | null> {
         const id = lineId ?? fallbackId;
         if (!id) return null;
@@ -39,7 +27,7 @@ export class HourlyService {
         start.setHours(7, 0, 0, 0);
 
         const end = new Date(start);
-        end.setDate(end.getDate() + 1); // sledeći dan u 07:00
+        end.setDate(end.getDate() + 1);
 
         const hourlies = await this.hourlyRepository.find({
             where: {
@@ -63,8 +51,8 @@ export class HourlyService {
             ...hourlyVal,
             plannedProductNo: +(plannedTarget / 8).toFixed(2),
             plannedEmployeesNo: plannedEmployees,
-            efficiencyE1: this.calculateEfficiency(hourlyVal.producedProductNo, plannedTarget / 8),
-            absentism: this.calculateAbsentism(hourlyVal.employeesNo, plannedEmployees),
+            efficiencyE1: calculateEfficiency(hourlyVal.producedProductNo, plannedTarget / 8),
+            absentism: calculateAbsentism(hourlyVal.employeesNo, plannedEmployees),
         });
 
         const newHourly = await this.hourlyRepository.save(hourly);
@@ -90,8 +78,8 @@ export class HourlyService {
             ...hourlyVal,
             plannedProductNo: +(plannedTarget / 8).toFixed(2),
             plannedEmployeesNo: plannedEmployees,
-            efficiencyE1: this.calculateEfficiency(hourlyVal.producedProductNo ?? existingHourly.producedProductNo, plannedTarget / 8),
-            absentism: this.calculateAbsentism(hourlyVal.employeesNo ?? existingHourly.employeesNo, plannedEmployees),
+            efficiencyE1: calculateEfficiency(hourlyVal.producedProductNo ?? existingHourly.producedProductNo, plannedTarget / 8),
+            absentism: calculateAbsentism(hourlyVal.employeesNo ?? existingHourly.employeesNo, plannedEmployees),
         });
 
         await this.hourlyRepository.save(updatedHourly);

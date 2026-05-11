@@ -6,8 +6,8 @@ export const hourlysReducer = createReducer(
   initialHourliesState,
 
   on(HourliesActions.load, state => ({ ...state, loading: true })),
-  on(HourliesActions.loadSuccess, (state, { items }) => ({ ...state, loading: false, hourlies: items })),
-  on(HourliesActions.loadFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(HourliesActions.loadSuccess, (state, { items }) => ({ ...state, loading: false,loaded:true, hourlies: items })),
+  on(HourliesActions.loadFailure, (state, { error }) => ({ ...state, loading: false,loaded:true, error })),
 
   on(HourliesActions.addSuccess, (state, { item }) => ({ ...state, hourlies: [item, ...state.hourlies] })),
   on(HourliesActions.addFailure, (state, { error }) => ({ ...state, error })),

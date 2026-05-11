@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { CreateUserDto, UserDto } from './dtos/user.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('Users')
 export class UserController {
     constructor(private readonly userService: UserService) { }

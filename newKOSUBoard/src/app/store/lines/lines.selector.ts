@@ -14,6 +14,11 @@ export const selectLinesLoading = createSelector(
   (state: LinesState) => state.loading
 );
 
+export const selectLinesLoaded = createSelector(
+  selectLinesState,
+  (state: LinesState) => state.loaded
+);
+
 export const selectLinesError = createSelector(
   selectLinesState,
   (state: LinesState) => state.error

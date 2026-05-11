@@ -14,6 +14,11 @@ export const selectHourliesLoading = createSelector(
   (state: HourliesState) => state.loading
 );
 
+export const selectHourliesLoaded = createSelector(
+  selectHourliesState,
+  (state: HourliesState) => state.loaded
+);
+
 export const selectHourliesError = createSelector(
   selectHourliesState,
   (state: HourliesState) => state.error

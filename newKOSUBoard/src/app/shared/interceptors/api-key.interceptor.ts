@@ -29,8 +29,8 @@ export const jwtInterceptor: HttpInterceptorFn = (
   const user = userAut.currentUser;
   // console.log(user);
   if (user?.token) {
-    
-    
+
+
     if (userAut.isTokenExpired(user.token)) {
       return handleTokenExpired(request, next, userAut, router);
     }
@@ -60,6 +60,8 @@ function handleTokenExpired(
         return next(addToken(request, newUser.token));
       }),
       catchError(error => {
+        console.log('refresh fail');
+        
         refreshInProgress = false;
         userAut.logout();
         router.navigateByUrl('/login');
@@ -68,7 +70,6 @@ function handleTokenExpired(
     );
   }
 
-  // Wait for refresh to complete
   return refreshTokenSubject.pipe(
     filter(user => user !== null),
     take(1),

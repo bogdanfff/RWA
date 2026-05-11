@@ -5,7 +5,7 @@ import * as SegmentsSelectors from '../../store/segments/segments.selector';
 import * as UsersSelectors from '../../store/users/users.selector';
 import { SegmentsActions } from '../../store/segments/segments.actions';
 import { UsersActions } from '../../store/users/users.actions';
-import { tap, map } from 'rxjs';
+import { tap, map, combineLatest, switchMap, take } from 'rxjs';
 
 export function getTeamSchema(store: Store): FormField[] {
   return [
@@ -21,18 +21,13 @@ export function getTeamSchema(store: Store): FormField[] {
       type: 'select',
       validators: [Validators.required],
       selectValue: 'id',
-      dropDown: store.select(SegmentsSelectors.selectAllSegments).pipe(
-        tap(segments => {
-          if (!segments || segments.length === 0) {
+      dropDown: store.select(SegmentsSelectors.selectSegmentsState).pipe(
+        tap(state => {
+          if (!state.loaded && !state.loading) {
             store.dispatch(SegmentsActions.load());
           }
         }),
-        map(segments =>
-          segments.map(s => ({
-            id: s.id,
-            val: s.segmentName
-          }))
-        )
+        switchMap(() => store.select(SegmentsSelectors.selectSegmentsDropdown))
       )
     },
 
@@ -42,21 +37,13 @@ export function getTeamSchema(store: Store): FormField[] {
       type: 'select',
       validators: [Validators.required],
       selectValue: 'id',
-      dropDown: store.select(UsersSelectors.selectAllUsers).pipe(
-        tap(users => {
-          if (!users || users.length === 0) {
+      dropDown: store.select(UsersSelectors.selectUsersState).pipe(
+        tap(state => {
+          if (!state.loaded && !state.loading) {
             store.dispatch(UsersActions.load());
           }
         }),
-        map(users =>
-          users
-            .filter(u => u.roleName === 'TeamLeader')
-            .map(u => ({
-              id: u.id,
-              val: u.userName
-            }))
-        )
-      )
+        switchMap(() => store.select(UsersSelectors.selectTeamLeaderDropdown)))
     },
 
     {

@@ -14,6 +14,39 @@ export class ErrorEffects {
   private actions$ = inject(Actions);
   private snackBar = inject(MatSnackBar);
 
+  showSuccess$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(
+      TeamsActions.addSuccess,
+      TeamsActions.updateSuccess,
+      TeamsActions.deleteSuccess,
+
+      UsersActions.addSuccess,
+      UsersActions.updateSuccess,
+      UsersActions.deleteSuccess,
+
+      LinesActions.addSuccess,
+      LinesActions.updateSuccess,
+      LinesActions.deleteSuccess,
+
+      SegmentsActions.addSuccess,
+      SegmentsActions.updateSuccess,
+      SegmentsActions.deleteSuccess,
+
+      HourliesActions.addSuccess,
+      HourliesActions.updateSuccess,
+      HourliesActions.deleteSuccess,
+    ),
+    tap((action) => {
+      this.snackBar.open(action.type, 'Close', {
+        duration: 3000,
+        panelClass: ['snackbar-success']
+      });
+    })
+  ),
+  { dispatch: false }
+);
+
   showError$ = createEffect(() =>
     this.actions$.pipe(
       ofType(

@@ -3,7 +3,7 @@ import { Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import * as UsersSelectors from '../../store/users/users.selector';
 import { UsersActions } from '../../store/users/users.actions';
-import { tap, map } from 'rxjs';
+import { tap, map, switchMap } from 'rxjs';
 
 export function getSegmentSchema(store: Store): FormField[] {
   return [
@@ -20,21 +20,13 @@ export function getSegmentSchema(store: Store): FormField[] {
       type: 'select',
       validators: [Validators.required],
       selectValue: 'id',
-      dropDown: store.select(UsersSelectors.selectAllUsers).pipe(
-        tap(users => {
-          if (!users || users.length === 0) {
-            store.dispatch(UsersActions.load());
-          }
-        }),
-        map(users =>
-          users
-            .filter(u => u.roleName === 'SegmentLeader')
-            .map(u => ({
-              id: u.id,
-              val: u.userName
-            }))
-        )
-      )
+      dropDown: store.select(UsersSelectors.selectUsersState).pipe(
+              tap(state => {
+                if (!state.loaded && !state.loading) {
+                  store.dispatch(UsersActions.load());
+                }
+              }),
+              switchMap(() => store.select(UsersSelectors.selectSegmentLeaders)))
     },
 
     {
